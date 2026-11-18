@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BondSpace Recuerdos que nos unen</title>
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="css/estilos.css?v=3">
+
+    <!-- Estilos de recuerdos y capsulas (debe ir despues de estilos.css) -->
+    <link rel="stylesheet" href="css/funcionalidades.css?v=3">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         PANTALLA DE INICIO
+    ====================================================== -->
+
+    <section id="inicio" class="pantalla-inicio">
+
+        <div class="inicio-contenido">
+
+            <div class="logo-grande">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <h1>Bond<span>Space</span></h1>
+
+            <p class="eslogan">
+                Un espacio para compartir momentos,
+                crear recuerdos y estar cerca.
+            </p>
+
+            <div class="botones-inicio">
+
+                <button class="btn btn-principal" onclick="mostrarCrearEspacio()">
+                    <i class="fa-solid fa-plus"></i>
+                    Crear espacio
+                </button>
+
+                <button class="btn btn-secundario" onclick="mostrarUnirse()">
+                    <i class="fa-solid fa-link"></i>
+                    Unirse a un espacio
+                </button>
+
+            </div>
+
+            <div class="caracteristicas">
+
+                <div>
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Privado</span>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-users"></i>
+                    <span>Colaborativo</span>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-camera"></i>
+                    <span>Recuerdos</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODAL CREAR ESPACIO
+    ====================================================== -->
+
+    <div id="modalCrear" class="modal">
+
+        <div class="modal-contenido">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalCrear')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono">
+                <i class="fa-solid fa-house"></i>
+            </div>
+
+            <h2>Crear un espacio</h2>
+
+            <p>
+                Crea un lugar privado para compartir
+                momentos especiales.
+            </p>
+
+            <form id="formCrearEspacio" onsubmit="crearEspacio(event)">
+
+                <label for="aliasCrear">Tu nombre</label>
+
+                <input type="text" id="aliasCrear" maxlength="30" placeholder="Ej. Ricardo">
+
+                <label for="nombreEspacio">
+                    Nombre del espacio
+                </label>
+
+                <input
+                    type="text"
+                    id="nombreEspacio"
+                    placeholder="Ej. Nuestros recuerdos"
+                >
+
+                <label for="tematica">
+                    Tematica
+                </label>
+
+                <select id="tematica">
+
+                    <option value="">
+                        Selecciona una tematica
+                    </option>
+
+                    <option value="Pareja">
+                        ❤️ Pareja
+                    </option>
+
+                    <option value="Amigos">
+                        👥 Amigos
+                    </option>
+
+                    <option value="Familia">
+                        🏠 Familia
+                    </option>
+
+                    <option value="Personalizado">
+                        ✨ Personalizado
+                    </option>
+
+                </select>
+
+                <div id="errorCrear" class="mensaje-error"></div>
+
+                <button type="submit" class="btn btn-principal btn-completo">
+                    Crear espacio
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL UNIRSE
+    ====================================================== -->
+
+    <div id="modalUnirse" class="modal">
+
+        <div class="modal-contenido">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalUnirse')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <h2>Unirse a un espacio</h2>
+
+            <p>
+                Introduce el código que te compartieron.
+            </p>
+
+            <label for="aliasUnirse">Tu nombre</label>
+
+            <input type="text" id="aliasUnirse" maxlength="30" placeholder="Ej. Andrea">
+
+            <label for="codigoEntrada">Código</label>
+
+            <input
+                type="text"
+                id="codigoEntrada"
+                placeholder="Ej. BS-4829"
+            >
+
+            <div id="errorCodigo" class="mensaje-error"></div>
+
+            <button class="btn btn-principal btn-completo"
+                onclick="unirseEspacio()">
+                Unirme al espacio
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL RECUERDO (crear y editar)
+    ====================================================== -->
+
+    <div id="modalRecuerdo" class="modal">
+
+        <div class="modal-contenido modal-ancho">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalRecuerdo')"
+                aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+
+            <h2 id="tituloModalRecuerdo">Nuevo recuerdo</h2>
+
+            <p>
+                Guarda un momento con una foto y unas palabras
+                para volver a el cuando quieras.
+            </p>
+
+            <form id="formRecuerdo" onsubmit="guardarRecuerdo(event)" novalidate>
+
+                <label for="tituloRecuerdo">Titulo</label>
+
+                <input
+                    type="text"
+                    id="tituloRecuerdo"
+                    maxlength="60"
+                    placeholder="Ej. Tarde de cafe"
+                >
+
+                <label for="fechaRecuerdo">Fecha del recuerdo</label>
+
+                <input type="date" id="fechaRecuerdo">
+
+                <label for="descripcionRecuerdo">Descripcion</label>
+
+                <textarea
+                    id="descripcionRecuerdo"
+                    maxlength="300"
+                    placeholder="¿Que paso ese dia?"
+                ></textarea>
+
+                <label for="inputFotoRecuerdo">Foto (opcional)</label>
+
+                <label class="zona-foto" for="inputFotoRecuerdo">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Elegir una foto</span>
+                    <small>JPG, PNG o WEBP</small>
+                    <input
+                        type="file"
+                        id="inputFotoRecuerdo"
+                        accept="image/*"
+                        onchange="seleccionarFoto(this, 'Recuerdo')"
+                    >
+                </label>
+
+                <div id="previewRecuerdo" class="preview-foto" hidden>
+                    <img alt="Vista previa de la foto">
+                    <button type="button" class="btn-quitar-foto"
+                        onclick="quitarFoto('Recuerdo')"
+                        aria-label="Quitar foto">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div id="errorRecuerdo" class="mensaje-error"></div>
+
+                <button type="submit" id="btnGuardarRecuerdo"
+                    class="btn btn-principal btn-completo">
+                    Guardar recuerdo
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL VER RECUERDO
+    ====================================================== -->
+
+    <div id="modalVerRecuerdo" class="modal">
+
+        <div class="modal-contenido modal-ancho">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalVerRecuerdo')"
+                aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <img id="fotoVerRecuerdo" class="visor-foto" alt="" hidden>
+
+            <h2 id="tituloVerRecuerdo"></h2>
+
+            <div id="metaVerRecuerdo" class="visor-meta"></div>
+
+            <div id="textoVerRecuerdo" class="visor-texto"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL CREAR CÁPSULA
+    ====================================================== -->
+
+    <div id="modalCapsula" class="modal">
+
+        <div class="modal-contenido modal-ancho">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalCapsula')"
+                aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+
+            <h2>Nueva cápsula del tiempo</h2>
+
+            <p>
+                Escribe un mensaje y elige cuándo se podrá abrir.
+                Hasta esa fecha nadie podrá leerlo.
+            </p>
+
+            <form id="formCapsula" onsubmit="guardarCapsula(event)" novalidate>
+
+                <label for="tituloCapsula">Título</label>
+
+                <input
+                    type="text"
+                    id="tituloCapsula"
+                    maxlength="60"
+                    placeholder="Ej. Para cuando nos veamos"
+                >
+
+                <label for="mensajeCapsula">Mensaje</label>
+
+                <textarea
+                    id="mensajeCapsula"
+                    maxlength="1000"
+                    placeholder="Escribe aquí lo que quieres que se lea en el futuro"
+                ></textarea>
+
+                <label for="fechaCapsula">Fecha de apertura</label>
+
+                <input type="date" id="fechaCapsula">
+
+                <label for="inputFotoCapsula">Foto (opcional)</label>
+
+                <label class="zona-foto" for="inputFotoCapsula">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Adjuntar una foto</span>
+                    <small>JPG, PNG o WEBP</small>
+                    <input
+                        type="file"
+                        id="inputFotoCapsula"
+                        accept="image/*"
+                        onchange="seleccionarFoto(this, 'Capsula')"
+                    >
+                </label>
+
+                <div id="previewCapsula" class="preview-foto" hidden>
+                    <img alt="Vista previa de la foto">
+                    <button type="button" class="btn-quitar-foto"
+                        onclick="quitarFoto('Capsula')"
+                        aria-label="Quitar foto">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div id="errorCapsula" class="mensaje-error"></div>
+
+                <button type="submit" class="btn btn-principal btn-completo">
+                    Guardar cápsula
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL ABRIR CÁPSULA
+    ====================================================== -->
+
+    <div id="modalVerCapsula" class="modal">
+
+        <div class="modal-contenido modal-ancho">
+
+            <button class="cerrar-modal" onclick="cerrarModal('modalVerCapsula')"
+                aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono">
+                <i class="fa-solid fa-envelope-open"></i>
+            </div>
+
+            <h2 id="tituloVerCapsula"></h2>
+
+            <div id="metaVerCapsula" class="visor-meta"></div>
+
+            <img id="fotoVerCapsula" class="visor-foto" alt="Foto de la cápsula" hidden>
+
+            <div id="mensajeVerCapsula" class="visor-texto"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL LLAMADA -->
+
+    <div id="modalLlamada" class="modal">
+
+        <div class="modal-contenido llamada">
+
+            <div class="llamada-escenario">
+
+                <video id="videoRemoto" autoplay playsinline hidden></video>
+
+                <div class="llamada-avatar" id="llamadaAvatar"></div>
+
+                <video id="videoLocal" autoplay playsinline muted hidden></video>
+
+            </div>
+
+            <h2 id="llamadaTitulo"></h2>
+            <p id="llamadaEstado" class="llamada-estado"></p>
+
+            <div class="llamada-botones" id="llEntrante" hidden>
+                <button class="llamada-btn rechazar" onclick="rechazarLlamada()" aria-label="Rechazar">
+                    <i class="fa-solid fa-phone-slash"></i>
+                </button>
+                <button class="llamada-btn aceptar" onclick="aceptarLlamada()" aria-label="Contestar">
+                    <i class="fa-solid fa-phone"></i>
+                </button>
+            </div>
+
+            <div class="llamada-botones" id="llControles">
+                <button class="llamada-btn neutro" id="btnMute" onclick="alternarMute()" aria-label="Silenciar micrófono">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button class="llamada-btn neutro" id="btnCamara" onclick="alternarCamara()" aria-label="Cámara">
+                    <i class="fa-solid fa-video"></i>
+                </button>
+                <button class="llamada-btn rechazar" onclick="colgar(true)" aria-label="Colgar">
+                    <i class="fa-solid fa-phone-slash"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL ACTIVIDAD COLABORATIVA -->
+
+    <div id="modalActividad" class="modal">
+
+        <div class="modal-contenido modal-ancho modal-actividad">
+
+            <button class="cerrar-modal" onclick="cerrarActividad(false)" aria-label="Cerrar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icono"><i id="iconoActividad" class="fa-solid fa-music"></i></div>
+
+            <h2 id="tituloActividad"></h2>
+
+            <div id="presenciaActividad" class="presencia"></div>
+
+            <div id="cuerpoActividad"></div>
+
+            <div class="acciones-modal">
+                <button class="btn btn-secundario" onclick="cerrarActividad(false)">Salir</button>
+                <button class="btn btn-peligro" onclick="finalizarActividad()">Finalizar para todos</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL CONFIRMAR (eliminar)
+    ====================================================== -->
+
+    <div id="modalConfirmar" class="modal">
+
+        <div class="modal-contenido modal-confirmar">
+
+            <h2>¿Estás seguro?</h2>
+
+            <p id="textoConfirmar"></p>
+
+            <div class="acciones-modal">
+
+                <button class="btn btn-secundario"
+                    onclick="cerrarModal('modalConfirmar')">
+                    Cancelar
+                </button>
+
+                <button class="btn btn-peligro"
+                    onclick="confirmarAccion()">
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         APLICACIÓN PRINCIPAL
+    ====================================================== -->
+
+    <section id="app" class="app">
+
+        <!-- MENÚ LATERAL -->
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <span>Bond<span>Space</span></span>
+
+            </div>
+
+            <div class="espacio-mini">
+
+                <div class="avatar-espacio">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div>
+                    <strong id="nombreDashboard">
+                        Mi espacio
+                    </strong>
+
+                    <small>
+                        Espacio privado
+                    </small>
+                </div>
+
+            </div>
+
+            <nav>
+
+                <button class="menu-item activo"
+                    onclick="mostrarSeccion('inicioDashboard', this)">
+                    <i class="fa-solid fa-house"></i>
+                    Inicio
+                </button>
+
+                <button class="menu-item"
+                    onclick="mostrarSeccion('actividades', this)">
+                    <i class="fa-solid fa-gamepad"></i>
+                    Actividades
+                </button>
+
+                <button class="menu-item"
+                    onclick="mostrarSeccion('recuerdos', this)">
+                    <i class="fa-solid fa-camera"></i>
+                    Recuerdos
+                </button>
+
+                <button class="menu-item"
+                    onclick="mostrarSeccion('capsulas', this)">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    Cápsulas
+                </button>
+
+                <button class="menu-item"
+                    onclick="mostrarSeccion('integrantes', this)">
+                    <i class="fa-solid fa-users"></i>
+                    Integrantes
+                </button>
+
+            </nav>
+
+            <div class="sidebar-inferior">
+
+                <button class="menu-item" onclick="mostrarSeccion('configuracion', this)">
+                    <i class="fa-solid fa-gear"></i>
+                    Configuración
+                </button>
+
+                <button class="menu-item salir"
+                    onclick="volverInicio()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Salir
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- CONTENIDO -->
+
+        <main class="contenido">
+
+
+            <!-- =========================================
+                 INICIO DASHBOARD
+            ========================================== -->
+
+            <section id="inicioDashboard" class="seccion activa">
+
+                <header class="header">
+
+                    <div>
+                        <p class="saludo">
+                            Bienvenido a tu espacio 👋
+                        </p>
+
+                        <h2 id="tituloDashboard">
+                            Nuestros momentos
+                        </h2>
+                    </div>
+
+                    <div class="usuario">
+                        <div class="usuario-avatar" id="inicialUsuario"></div>
+
+                        <div>
+                            <strong id="nombreUsuario"></strong>
+                            <small id="rolUsuario"></small>
+                        </div>
+                    </div>
+
+                </header>
+
+
+                <!-- TARJETA PRINCIPAL -->
+
+                <div class="hero-card">
+
+                    <div>
+
+                        <span class="etiqueta-privado">
+                            <i class="fa-solid fa-lock"></i>
+                            Espacio privado · <span id="temaDashboard"></span>
+                        </span>
+
+                        <h1>
+                            Cada momento merece
+                            ser recordado.
+                        </h1>
+
+                        <p>
+                            Comparte experiencias, actividades
+                            y recuerdos con las personas que más quieres.
+                        </p>
+
+                        <button class="btn btn-blanco"
+                            onclick="mostrarSeccionPorNombre('recuerdos')">
+                            Ver recuerdos
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="hero-corazon">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIVIDADES -->
+
+                <div class="seccion-titulo">
+
+                    <div>
+                        <h3>¿Qué hacemos hoy?</h3>
+                        <p>Actividades para compartir a distancia.</p>
+                    </div>
+
+                </div>
+
+                <div class="tarjetas-actividades">
+
+                    <div class="actividad-card"
+                        onclick="mostrarSeccionPorNombre('actividades')">
+
+                        <div class="actividad-icon musica">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+
+                        <h4>Escuchar música</h4>
+
+                        <p>
+                            Escuchen sus canciones favoritas juntos.
+                        </p>
+
+                        <span>Comenzar
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+
+                    <div class="actividad-card"
+                        onclick="mostrarSeccionPorNombre('actividades')">
+
+                        <div class="actividad-icon video">
+                            <i class="fa-solid fa-film"></i>
+                        </div>
+
+                        <h4>Ver contenido</h4>
+
+                        <p>
+                            Disfruten una película o vídeo juntos.
+                        </p>
+
+                        <span>Comenzar
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+
+                    <div class="actividad-card"
+                        onclick="mostrarSeccionPorNombre('actividades')">
+
+                        <div class="actividad-icon dibujo">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+
+                        <h4>Dibujar juntos</h4>
+
+                        <p>
+                            Dejen volar su creatividad.
+                        </p>
+
+                        <span>Comenzar
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+
+                    <div class="actividad-card"
+                        onclick="mostrarSeccionPorNombre('actividades')">
+
+                        <div class="actividad-icon reto">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+
+                        <h4>Retos</h4>
+
+                        <p>
+                            Pongan a prueba cuánto se conocen.
+                        </p>
+
+                        <span>Comenzar
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RESUMEN -->
+
+                <div class="resumen-grid">
+
+                    <div class="resumen-card">
+
+                        <div class="resumen-icon">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+
+                        <div>
+                            <strong id="contadorRecuerdos">0</strong>
+                            <span>Recuerdos guardados</span>
+                        </div>
+
+                    </div>
+
+                    <div class="resumen-card">
+
+                        <div class="resumen-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <div>
+                            <strong id="contadorIntegrantes">0</strong>
+                            <span>Integrantes</span>
+                        </div>
+
+                    </div>
+
+                    <div class="resumen-card">
+
+                        <div class="resumen-icon">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+
+                        <div>
+                            <strong id="contadorCapsulas">0</strong>
+                            <span>Cápsulas pendientes</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================================
+                 ACTIVIDADES
+            ========================================== -->
+
+            <section id="actividades" class="seccion">
+
+                <header class="header">
+
+                    <div>
+                        <p class="saludo">Momentos compartidos</p>
+                        <h2>Actividades colaborativas</h2>
+                    </div>
+
+                </header>
+
+                <div class="actividad-grande-grid">
+
+                    <div class="actividad-grande">
+
+                        <div class="actividad-icon musica">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+
+                        <h3>Escuchar música</h3>
+
+                        <p>
+                            Crea una sesión musical y disfruta
+                            canciones con los demás integrantes.
+                        </p>
+
+                        <button class="btn btn-principal" onclick="abrirActividad('musica')">
+                            Iniciar sesión
+                        </button>
+
+                    </div>
+
+
+                    <div class="actividad-grande">
+
+                        <div class="actividad-icon video">
+                            <i class="fa-solid fa-film"></i>
+                        </div>
+
+                        <h3>Contenido audiovisual</h3>
+
+                        <p>
+                            Comparte una película, serie o vídeo
+                            para verlo simultáneamente.
+                        </p>
+
+                        <button class="btn btn-principal" onclick="abrirActividad('video')">
+                            Crear sesión
+                        </button>
+
+                    </div>
+
+
+                    <div class="actividad-grande">
+
+                        <div class="actividad-icon dibujo">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+
+                        <h3>Dibujo colaborativo</h3>
+
+                        <p>
+                            Dibujen juntos en un mismo espacio creativo.
+                        </p>
+
+                        <button class="btn btn-principal" onclick="abrirActividad('dibujo')">
+                            Abrir pizarra
+                        </button>
+
+                    </div>
+
+
+                    <div class="actividad-grande">
+
+                        <div class="actividad-icon reto">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+
+                        <h3>Retos</h3>
+
+                        <p>
+                            Participa en pequeños retos para
+                            divertirse juntos.
+                        </p>
+
+                        <button class="btn btn-principal" onclick="abrirActividad('reto')">
+                            Ver retos
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================================
+                 RECUERDOS
+            ========================================== -->
+
+            <section id="recuerdos" class="seccion">
+
+                <header class="header">
+
+                    <div>
+                        <p class="saludo">Nuestra historia</p>
+                        <h2>Álbum de recuerdos</h2>
+                    </div>
+
+                    <button class="btn btn-principal"
+                        onclick="agregarRecuerdo()">
+                        <i class="fa-solid fa-plus"></i>
+                        Agregar recuerdo
+                    </button>
+
+                </header>
+
+
+                <div class="filtros">
+
+                    <button class="chip activo" data-filtro="todos"
+                        onclick="filtrarRecuerdos('todos')">
+                        Todos
+                    </button>
+
+                    <button class="chip" data-filtro="favoritos"
+                        onclick="filtrarRecuerdos('favoritos')">
+                        <i class="fa-solid fa-heart"></i>
+                        Favoritos
+                    </button>
+
+                </div>
+
+
+                <!-- Las tarjetas se generan desde script.js -->
+                <div class="album" id="albumRecuerdos"></div>
+
+            </section>
+
+
+            <!-- =========================================
+                 CÁPSULAS DEL TIEMPO
+            ========================================== -->
+
+            <section id="capsulas" class="seccion">
+
+                <header class="header">
+
+                    <div>
+                        <p class="saludo">Recuerdos para el futuro</p>
+                        <h2>Cápsulas del tiempo</h2>
+                    </div>
+
+                    <button class="btn btn-principal"
+                        onclick="crearCapsula()">
+                        <i class="fa-solid fa-plus"></i>
+                        Crear cápsula
+                    </button>
+
+                </header>
+
+
+                <div class="capsula-intro">
+
+                    <div class="capsula-icon">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+
+                    <div>
+                        <h3>Guarda un mensaje para el futuro</h3>
+
+                        <p>
+                            Escribe un recuerdo, una fotografía o un mensaje
+                            y decide cuándo quieres volver a abrirlo.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Las cápsulas se generan desde script.js -->
+                <div class="capsulas-grid" id="capsulasGrid"></div>
+
+            </section>
+
+
+            <!-- =========================================
+                 INTEGRANTES
+            ========================================== -->
+
+            <section id="integrantes" class="seccion">
+
+                <header class="header">
+
+                    <div>
+                        <p class="saludo">Personas del espacio</p>
+                        <h2>Integrantes</h2>
+                    </div>
+
+                    <button id="btnInvitar" class="btn btn-principal"
+                        onclick="mostrarInvitacion()">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Invitar integrante
+                    </button>
+
+                </header>
+
+
+                <div class="codigo-invitacion" id="panelInvitacion">
+
+                    <div>
+                        <span>Código de invitación</span>
+                        <strong id="codigoInvitacion"></strong>
+                    </div>
+
+                    <div class="codigo-acciones">
+                        <button class="btn btn-secundario" onclick="copiarCodigo()">
+                            <i class="fa-solid fa-copy"></i>
+                            Copiar enlace
+                        </button>
+                        <button class="btn btn-secundario" onclick="renovarCodigo()">
+                            <i class="fa-solid fa-rotate"></i>
+                            Generar nuevo
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <div class="integrantes-lista" id="listaIntegrantes"></div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 CONFIGURACION
+            ========================================== -->
+
+            <section id="configuracion" class="seccion">
+
+                <header class="header">
+                    <div>
+                        <p class="saludo">Tu cuenta</p>
+                        <h2>Configuración</h2>
+                    </div>
+                </header>
+
+                <div class="perfil-grid">
+
+                    <aside class="perfil-resumen">
+
+                        <div class="perfil-banner"></div>
+
+                        <div class="perfil-avatar-btn">
+                            <span class="perfil-avatar" id="avatarPerfil"></span>
+                            <label class="perfil-camara" for="inputFotoPerfil" title="Cambiar foto" aria-label="Cambiar foto">
+                                <i class="fa-solid fa-camera"></i>
+                            </label>
+                        </div>
+                        <input type="file" id="inputFotoPerfil" accept="image/*" hidden
+                            onchange="cambiarFotoPerfil(this)">
+
+                        <h3 id="resumenNombre"></h3>
+                        <span class="perfil-rol" id="resumenRol"></span>
+                        <p class="perfil-espacio"><i class="fa-solid fa-lock"></i> <span id="resumenEspacio"></span></p>
+
+                        <div class="perfil-resumen-acc">
+                            <label class="btn btn-principal" for="inputFotoPerfil">
+                                <i class="fa-solid fa-camera"></i>
+                                Cambiar foto
+                            </label>
+                            <button type="button" class="btn btn-secundario" onclick="quitarFotoPerfil()">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Quitar foto
+                            </button>
+                        </div>
+
+                    </aside>
+
+                    <form id="formPerfil" class="perfil-form" onsubmit="guardarPerfil(event)" novalidate>
+
+                        <div class="perfil-bloque">
+
+                            <div class="bloque-titulo">
+                                <span class="bloque-icono"><i class="fa-solid fa-user"></i></span>
+                                <div>
+                                    <h3>Perfil público</h3>
+                                    <p>Lo ven todos los integrantes del espacio.</p>
+                                </div>
+                            </div>
+
+                            <div class="campo">
+                                <label for="perfilUsuario">Nombre de usuario</label>
+                                <div class="campo-input">
+                                    <i class="fa-solid fa-at"></i>
+                                    <input type="text" id="perfilUsuario" maxlength="30" placeholder="Cómo te verán los demás"
+                                        oninput="document.getElementById('resumenNombre').textContent = this.value || ' '">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="perfil-bloque">
+
+                            <div class="bloque-titulo">
+                                <span class="bloque-icono privado"><i class="fa-solid fa-lock"></i></span>
+                                <div>
+                                    <h3>Datos personales</h3>
+                                    <p>Privados: nadie más los ve.</p>
+                                </div>
+                            </div>
+
+                            <div class="campo">
+                                <label for="perfilReal">Nombre real</label>
+                                <div class="campo-input">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input type="text" id="perfilReal" maxlength="60" autocomplete="name" placeholder="Nombre y apellido">
+                                </div>
+                            </div>
+
+                            <div class="perfil-fila">
+
+                                <div class="campo">
+                                    <label for="perfilEdad">Edad</label>
+                                    <div class="campo-input">
+                                        <i class="fa-solid fa-cake-candles"></i>
+                                        <input type="number" id="perfilEdad" min="1" max="120" placeholder="Años">
+                                    </div>
+                                </div>
+
+                                <div class="campo">
+                                    <label for="perfilCelular">Celular</label>
+                                    <div class="campo-input">
+                                        <i class="fa-solid fa-mobile-screen"></i>
+                                        <input type="tel" id="perfilCelular" maxlength="20" autocomplete="tel" placeholder="+57 300 000 0000">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <p class="perfil-error" id="errorPerfil" role="alert"></p>
+
+                        <button type="submit" class="btn btn-principal btn-guardar">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Guardar cambios
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+
+    <!-- NOTIFICACIÓN -->
+
+    <div id="notificacion" class="notificacion">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        <span id="textoNotificacion">
+            Operación realizada correctamente.
+        </span>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="js/script.js?v=3"></script>
+    <script src="js/perfil.js?v=3"></script>
+    <script src="js/actividades.js?v=3"></script>
+    <script src="js/llamadas.js?v=3"></script>
+
+</body>
+
+</html>
